@@ -21,6 +21,7 @@ Panel {
   readonly property var actionOptions: [
     { value: "none", label: "None", description: "Do nothing" },
     { value: "workspace", label: "Switch workspace", description: "Move continuously between workspaces" },
+    { value: "relative_workspace", label: "Relative workspace", description: "Reliably move next or previous through empty workspaces" },
     { value: "focus", label: "Focus window", description: "Focus a window in the gesture direction" },
     { value: "move", label: "Move window", description: "Move the active window" },
     { value: "resize", label: "Resize window", description: "Resize the active window" },
@@ -55,21 +56,22 @@ Panel {
   // Complete first-run preset. Saved shell.json values override these after install.
   readonly property var installationDefaults: ({
     enabled: true,
-    selectedFingers: 2,
+    selectedFingers: 3,
     clickMethod: "clickfinger",
     tapMap: "lrm",
     captureTrigger: "threefinger",
     captureAction: "screenshot",
-    screenshotEditor: false,
+    screenshotEditor: true,
     f2_pinchin: "cursor_zoom",
     f2_pinchout: "cursor_zoom",
     f3_left: "focus",
     f3_right: "focus",
     f3_up: "focus",
     f3_down: "focus",
-    f3_pinchout: "cursor_zoom",
-    f4_left: "workspace",
-    f4_right: "workspace",
+    f3_pinchin: "none",
+    f3_pinchout: "none",
+    f4_left: "relative_workspace",
+    f4_right: "relative_workspace",
     f4_up: "fullscreen",
     f4_down: "fullscreen"
   })

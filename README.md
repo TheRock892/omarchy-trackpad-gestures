@@ -23,13 +23,15 @@ The installer backs up `~/.config/hypr/input.lua` and `~/.config/omarchy/shell.j
 
 - Two-finger pinch: cursor zoom
 - Three-finger swipes: focus windows in each direction
-- Three-finger pinch out: cursor zoom
-- Four-finger horizontal swipe: switch workspace
+- Three-finger pinch in/out: none
+- Four-finger left/right swipe: relative next/previous workspace
 - Four-finger vertical swipe: fullscreen
 - One-finger tap: left-click
 - Two-finger tap: right-click
 - Three-finger tap: screenshot capture
-- Screenshot editor: off
+- Screenshot editor: on
+
+The Relative workspace action uses a discrete `r+1` step going forward and an `m-1` step going back. Unlike Hyprland's continuous workspace action, it can leave an empty workspace instead of becoming stuck there.
 
 Every value can be changed from the popup after installation.
 

@@ -22,7 +22,7 @@ case "$capture_action" in screenshot|record) ;; *) exit 2 ;; esac
 case "$screenshot_editor" in true|false) ;; *) exit 2 ;; esac
 
 directions=(left right up down pinchin pinchout)
-actions=(none workspace move resize special close fullscreen maximize float tile cursor_zoom scroll_move focus)
+actions=(none workspace relative_workspace move resize special close fullscreen maximize float tile cursor_zoom scroll_move focus)
 config_dir="${XDG_CONFIG_HOME:-$HOME/.config}/hypr"
 output="$config_dir/gestures-generated.lua"
 temporary="$output.tmp"
@@ -36,7 +36,7 @@ valid_action() {
 }
 
 gesture_line() {
-  local fingers=$1 direction=$2 action=$3 short_direction
+  local fingers=$1 direction=$2 action=$3 short_direction workspace_target
   [[ $action == none ]] && return 0
   valid_action "$action" || return 2
 
@@ -56,6 +56,14 @@ gesture_line() {
     focus)
       case "$direction" in left) short_direction=l ;; right) short_direction=r ;; up) short_direction=u ;; down) short_direction=d ;; *) short_direction=l ;; esac
       printf 'hl.gesture({ fingers = %s, direction = "%s", action = function() hl.dispatch(hl.dsp.focus({ direction = "%s" })) end })\n' "$fingers" "$direction" "$short_direction"
+      ;;
+    relative_workspace)
+      case "$direction" in
+        left|up|pinchin) workspace_target='r+1' ;;
+        right|down|pinchout) workspace_target='m-1' ;;
+        *) workspace_target='r+1' ;;
+      esac
+      printf 'hl.gesture({ fingers = %s, direction = "%s", action = function() hl.dispatch(hl.dsp.focus({ workspace = "%s" })) end })\n' "$fingers" "$direction" "$workspace_target"
       ;;
     *)
       printf 'hl.gesture({ fingers = %s, direction = "%s", action = "%s" })\n' "$fingers" "$direction" "$action"
@@ -106,21 +114,21 @@ if [[ $enabled == true ]]; then
         down=none
       fi
 
-      if [[ $left == "$right" && $left != none && $left != focus ]]; then
+      if [[ $left == "$right" && $left != none && $left != focus && $left != relative_workspace ]]; then
         gesture_line "$fingers" horizontal "$left"
       else
         gesture_line "$fingers" left "$left"
         gesture_line "$fingers" right "$right"
       fi
 
-      if [[ $up == "$down" && $up != none && $up != focus ]]; then
+      if [[ $up == "$down" && $up != none && $up != focus && $up != relative_workspace ]]; then
         gesture_line "$fingers" vertical "$up"
       else
         gesture_line "$fingers" up "$up"
         gesture_line "$fingers" down "$down"
       fi
 
-      if [[ $pinch_in == "$pinch_out" && $pinch_in != none && $pinch_in != focus ]]; then
+      if [[ $pinch_in == "$pinch_out" && $pinch_in != none && $pinch_in != focus && $pinch_in != relative_workspace ]]; then
         gesture_line "$fingers" pinch "$pinch_in"
       else
         gesture_line "$fingers" pinchin "$pinch_in"
