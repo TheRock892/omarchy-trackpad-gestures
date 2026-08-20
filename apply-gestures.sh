@@ -59,8 +59,8 @@ gesture_line() {
       ;;
     relative_workspace)
       case "$direction" in
-        left|up|pinchin) workspace_target='+1' ;;
-        right|down|pinchout) workspace_target='-1' ;;
+        right|down|pinchout) workspace_target='+1' ;;
+        left|up|pinchin) workspace_target='-1' ;;
         *) workspace_target='+1' ;;
       esac
       printf 'hl.gesture({ fingers = %s, direction = "%s", action = function() hl.dispatch(hl.dsp.focus({ workspace = "%s" })) end })\n' "$fingers" "$direction" "$workspace_target"
