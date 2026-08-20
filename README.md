@@ -31,7 +31,7 @@ The installer backs up `~/.config/hypr/input.lua` and `~/.config/omarchy/shell.j
 - Three-finger tap: screenshot capture
 - Screenshot editor: off
 
-The Relative workspace action uses discrete numeric steps: swipe right advances `+1` and swipe left goes back `-1`. It moves strictly in workspace-ID order, including empty workspaces, without the stuck state of Hyprland's continuous workspace action.
+The Relative workspace action uses discrete numeric steps: swipe right advances `+1` and swipe left goes back `-1`. It moves strictly in workspace-ID order, including empty workspaces, without the stuck state of Hyprland's continuous workspace action. A live motion threshold dispatches the step before finger release so workspace changes remain responsive.
 
 Every value can be changed from the popup after installation.
 
