@@ -23,11 +23,7 @@ The installer backs up `~/.config/hypr/input.lua` and `~/.config/omarchy/shell.j
 
 ## First-run preset
 
-- Two-finger pinch: cursor zoom
-- Three-finger swipes: focus windows in each direction
-- Three-finger pinch in/out: none
-- Four-finger left/right swipe: relative next/previous workspace
-- Four-finger vertical swipe: fullscreen
+- All two-, three-, and four-finger swipe and pinch gestures: none
 - One-finger tap: left-click
 - Two-finger tap: right-click
 - Three-finger tap: screenshot capture

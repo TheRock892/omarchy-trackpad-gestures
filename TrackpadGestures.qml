@@ -53,7 +53,7 @@ Panel {
     { value: "record", label: "Screen recording", description: "Start or stop screen recording" }
   ]
 
-  // Complete first-run preset. Saved shell.json values override these after install.
+  // Safe first-run preset. Saved shell.json values override these after install.
   readonly property var installationDefaults: ({
     enabled: true,
     selectedFingers: 3,
@@ -62,18 +62,24 @@ Panel {
     captureTrigger: "threefinger",
     captureAction: "screenshot",
     screenshotEditor: false,
-    f2_pinchin: "cursor_zoom",
-    f2_pinchout: "cursor_zoom",
-    f3_left: "focus",
-    f3_right: "focus",
-    f3_up: "focus",
-    f3_down: "focus",
+    f2_left: "none",
+    f2_right: "none",
+    f2_up: "none",
+    f2_down: "none",
+    f2_pinchin: "none",
+    f2_pinchout: "none",
+    f3_left: "none",
+    f3_right: "none",
+    f3_up: "none",
+    f3_down: "none",
     f3_pinchin: "none",
     f3_pinchout: "none",
-    f4_left: "relative_workspace",
-    f4_right: "relative_workspace",
-    f4_up: "fullscreen",
-    f4_down: "fullscreen"
+    f4_left: "none",
+    f4_right: "none",
+    f4_up: "none",
+    f4_down: "none",
+    f4_pinchin: "none",
+    f4_pinchout: "none"
   })
 
   readonly property bool gesturesEnabled: setting("enabled", installationDefaults.enabled) === true
