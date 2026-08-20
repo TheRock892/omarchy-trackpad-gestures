@@ -15,7 +15,7 @@ for command_name in jq hyprctl omarchy-shell; do
 done
 
 [[ -f $plugin_dir/manifest.json ]] || {
-  echo "Clone this repository to $plugin_dir before running install.sh." >&2
+  echo "Install the plugin first: omarchy plugin add https://github.com/mpweaver/omarchy-trackpad-gestures --yes" >&2
   exit 1
 }
 [[ -f $hypr_input ]] || {

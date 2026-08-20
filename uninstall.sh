@@ -28,4 +28,4 @@ omarchy-shell shell rescanPlugins || true
 hyprctl reload >/dev/null
 hyprctl configerrors
 
-echo "Trackpad Gestures removed from Omarchy. The repository directory was left in place."
+echo "Trackpad Gestures integration removed. Delete the checkout with: omarchy plugin remove $plugin_id --yes"

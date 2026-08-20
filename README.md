@@ -15,11 +15,11 @@ The popup configures 2-, 3-, and 4-finger swipes and pinches, toggles all gestur
 ## Install
 
 ```bash
-git clone https://github.com/mpweaver/omarchy-trackpad-gestures.git ~/.config/omarchy/plugins/user.trackpad-gestures
+omarchy plugin add https://github.com/mpweaver/omarchy-trackpad-gestures --yes
 ~/.config/omarchy/plugins/user.trackpad-gestures/install.sh
 ```
 
-The installer backs up `~/.config/hypr/input.lua` and `~/.config/omarchy/shell.json`, adds the plugin to the right side of the bar, and reloads Hyprland. It is safe to run again.
+Omarchy manages the repository checkout. The second command performs the additional Hyprland integration that a standard bar widget does not need: it backs up `~/.config/hypr/input.lua` and `~/.config/omarchy/shell.json`, adds the plugin to the right side of the bar, and reloads Hyprland. It is safe to run again.
 
 ## First-run preset
 
@@ -42,7 +42,7 @@ When the screenshot-editor toggle is enabled, the plugin uses `omarchy-screensho
 ## Update
 
 ```bash
-git -C ~/.config/omarchy/plugins/user.trackpad-gestures pull --ff-only
+omarchy plugin update user.trackpad-gestures --yes
 ~/.config/omarchy/plugins/user.trackpad-gestures/install.sh
 ```
 
@@ -50,9 +50,10 @@ git -C ~/.config/omarchy/plugins/user.trackpad-gestures pull --ff-only
 
 ```bash
 ~/.config/omarchy/plugins/user.trackpad-gestures/uninstall.sh
+omarchy plugin remove user.trackpad-gestures --yes
 ```
 
-Afterward, remove `~/.config/omarchy/plugins/user.trackpad-gestures` if you no longer want the source checkout.
+Run the cleanup script first so the generated Hyprland configuration is removed before Omarchy deletes the plugin directory.
 
 ## License
 
