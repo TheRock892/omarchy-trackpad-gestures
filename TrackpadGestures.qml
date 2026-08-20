@@ -61,7 +61,7 @@ Panel {
     tapMap: "lrm",
     captureTrigger: "threefinger",
     captureAction: "screenshot",
-    screenshotEditor: true,
+    screenshotEditor: false,
     f2_pinchin: "cursor_zoom",
     f2_pinchout: "cursor_zoom",
     f3_left: "focus",
