@@ -1,0 +1,21 @@
+{
+  "schemaVersion": 1,
+  "id": "user.trackpad-gestures",
+  "name": "Trackpad Gestures",
+  "version": "1.0.0",
+  "author": "Mark Weaver",
+  "description": "Configure Hyprland trackpad gestures and click mappings from the bar",
+  "kinds": [
+    "bar-widget"
+  ],
+  "entryPoints": {
+    "barWidget": "TrackpadGestures.qml"
+  },
+  "barWidget": {
+    "displayName": "Trackpad Gestures",
+    "description": "Configure 2, 3, and 4 finger gestures",
+    "category": "System",
+    "allowMultiple": false,
+    "defaultSection": "right"
+  }
+}
