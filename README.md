@@ -31,7 +31,7 @@ The installer backs up `~/.config/hypr/input.lua` and `~/.config/omarchy/shell.j
 - Three-finger tap: screenshot capture
 - Screenshot editor: on
 
-The Relative workspace action uses a discrete `r+1` step going forward and an `m-1` step going back. Unlike Hyprland's continuous workspace action, it can leave an empty workspace instead of becoming stuck there.
+The Relative workspace action uses discrete numeric `+1` and `-1` steps. It moves strictly in workspace-ID order, including empty workspaces, without the stuck state of Hyprland's continuous workspace action.
 
 Every value can be changed from the popup after installation.
 
