@@ -2,6 +2,8 @@
 
 A Quickshell bar widget for configuring Hyprland trackpad gestures on Omarchy.
 
+![Trackpad Gestures configuration panel](assets/trackpad-gestures-preview.png)
+
 The popup configures 2-, 3-, and 4-finger swipes and pinches, toggles all gestures, changes click/tap mappings, and assigns a trackpad click to screenshots or screen recording. Changes persist in `~/.config/omarchy/shell.json` and apply live through a generated `~/.config/hypr/gestures-generated.lua` file.
 
 ## Requirements
