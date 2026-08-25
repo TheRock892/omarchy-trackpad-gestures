@@ -32,7 +32,9 @@ Panel {
     { value: "float", label: "Float window", description: "Put the active window in floating mode" },
     { value: "tile", label: "Tile window", description: "Put the active window in tiled mode" },
     { value: "cursor_zoom", label: "Cursor zoom", description: "Continuously zoom around the cursor" },
-    { value: "scroll_move", label: "Scroll layout", description: "Move through the scrolling layout" }
+    { value: "scroll_move", label: "Scroll layout", description: "Move through the scrolling layout" },
+    { value: "expose", label: "Expose", description: "Toggle window overview (like macOS Exposé)" },
+    { value: "custom_command", label: "Custom command", description: "Run an arbitrary shell command" }
   ]
   readonly property var clickOptions: [
     { value: "clickfinger", label: "Finger count", description: "Two-finger press is right-click" },
@@ -99,6 +101,16 @@ Panel {
     return String(setting("f" + fingers + "_" + direction, defaultAction(fingers, direction)))
   }
 
+  function customCommandValue(fingers, direction) {
+    return String(setting("cmd_f" + fingers + "_" + direction, ""))
+  }
+
+  function setCustomCommand(fingers, direction, command) {
+    var values = {}
+    values["cmd_f" + fingers + "_" + direction] = command
+    persist(values)
+  }
+
   function persist(values) {
     var entry = { id: root.moduleName }
     for (var key in root.settings) if (key !== "id") entry[key] = root.settings[key]
@@ -120,6 +132,24 @@ Panel {
     for (var fingers = 2; fingers <= 4; fingers++)
       for (var i = 0; i < directions.length; i++)
         command.push(gestureValue(fingers, directions[i].key))
+
+    // Build custom commands payload (newline-separated key|command pairs)
+    var customParts = []
+    for (var fingers = 2; fingers <= 4; fingers++) {
+      for (var i = 0; i < directions.length; i++) {
+        var action = gestureValue(fingers, directions[i].key)
+        if (action === "custom_command") {
+          var cmd = customCommandValue(fingers, directions[i].key)
+          if (cmd !== "") {
+            customParts.push(fingers + "_" + directions[i].key + "|" + cmd)
+          }
+        }
+      }
+    }
+    if (customParts.length > 0) {
+      command.push(customParts.join("\n"))
+    }
+
     return command
   }
 
@@ -268,7 +298,7 @@ Panel {
           delegate: Item {
             required property var modelData
             width: content.width
-            height: picker.implicitHeight
+            height: picker.implicitHeight + (root.gestureValue(root.selectedFingerIndex + 2, modelData.key) === "custom_command" ? cmdField.implicitHeight + Style.space(8) : 0)
 
             SearchableDropdown {
               id: picker
@@ -279,6 +309,20 @@ Panel {
               foreground: root.barForeground
               placeholderText: "Choose an action"
               onChanged: function(value) { root.setGesture(root.selectedFingerIndex + 2, modelData.key, value) }
+            }
+
+            TextField {
+              id: cmdField
+              anchors.top: picker.bottom
+              anchors.topMargin: Style.space(8)
+              width: parent.width
+              visible: root.gestureValue(root.selectedFingerIndex + 2, modelData.key) === "custom_command"
+              placeholderText: "Enter command (e.g. alacritty)"
+              text: root.customCommandValue(root.selectedFingerIndex + 2, modelData.key)
+              foreground: root.barForeground
+              accent: root.barForeground
+              font.family: root.bar ? root.bar.fontFamily : Style.font.family
+              onTextChanged: root.setCustomCommand(root.selectedFingerIndex + 2, modelData.key, text)
             }
           }
         }

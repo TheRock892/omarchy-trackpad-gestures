@@ -1,8 +1,10 @@
 #!/usr/bin/env bash
 set -euo pipefail
 
-if (( $# != 24 )); then
-  echo "expected 24 settings, got $#" >&2
+# We expect 6 header args + 18 gesture args (+ optional 1 for custom commands)
+# Total: 24 or 25 args (original was 24)
+if (( $# < 24 || $# > 25 )); then
+  echo "expected 24 or 25 settings, got $#" >&2
   exit 2
 fi
 
@@ -12,6 +14,13 @@ tap_map=$3
 capture_trigger=$4
 capture_action=$5
 screenshot_editor=$6
+
+# Save custom commands arg (position 25) before shifting
+custom_commands_raw=""
+if (( $# == 25 )); then
+  custom_commands_raw="${25}"
+fi
+
 shift 6
 
 case "$enabled" in true|false) ;; *) exit 2 ;; esac
@@ -22,7 +31,15 @@ case "$capture_action" in screenshot|record) ;; *) exit 2 ;; esac
 case "$screenshot_editor" in true|false) ;; *) exit 2 ;; esac
 
 directions=(left right up down pinchin pinchout)
-actions=(none workspace relative_workspace move resize special close fullscreen maximize float tile cursor_zoom scroll_move focus)
+actions=(none workspace relative_workspace move resize special close fullscreen maximize float tile cursor_zoom scroll_move focus expose custom_command)
+
+# Parse custom commands into an associative array
+declare -A custom_cmd_map
+if [[ -n $custom_commands_raw ]]; then
+  while IFS='|' read -r key cmd; do
+    [[ -n $key && -n $cmd ]] && custom_cmd_map[$key]=$cmd
+  done <<< "$custom_commands_raw"
+fi
 config_dir="${XDG_CONFIG_HOME:-$HOME/.config}/hypr"
 output="$config_dir/gestures-generated.lua"
 temporary="$output.tmp"
@@ -56,6 +73,24 @@ gesture_line() {
     focus)
       case "$direction" in left) short_direction=l ;; right) short_direction=r ;; up) short_direction=u ;; down) short_direction=d ;; *) short_direction=l ;; esac
       printf 'hl.gesture({ fingers = %s, direction = "%s", action = function() hl.dispatch(hl.dsp.focus({ direction = "%s" })) end })\n' "$fingers" "$direction" "$short_direction"
+      ;;
+    expose)
+      printf 'hl.gesture({ fingers = %s, direction = "%s", action = function() os.execute("omarchy-shell expose toggle") end })\n' "$fingers" "$direction"
+      ;;
+    custom_command)
+      local cmd_key="${fingers}_${direction}"
+      local cmd="${custom_cmd_map[$cmd_key]:-}"
+      if [[ -n $cmd ]]; then
+        # Use Lua long bracket syntax [=[...]=] to avoid escaping issues
+        # Need to handle the case where cmd contains ]=]
+        local lua_cmd
+        if [[ $cmd == *']=]'* ]]; then
+          lua_cmd="[==[${cmd}==]"
+        else
+          lua_cmd="[=[${cmd}]=]"
+        fi
+        printf 'hl.gesture({ fingers = %s, direction = "%s", action = function() os.execute(%s) end })\n' "$fingers" "$direction" "$lua_cmd"
+      fi
       ;;
     relative_workspace)
       case "$direction" in
